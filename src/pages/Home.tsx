@@ -64,7 +64,7 @@ export default function Home() {
             </span>
             <span className="inline-flex items-center gap-1.5">
               <Calendar size={15} className="text-accent" />
-              Semestre 1 – 2026
+              2026
             </span>
           </div>
 
@@ -95,16 +95,10 @@ export default function Home() {
       {/* Componentes resumen */}
       <section className="mx-auto max-w-6xl px-6 py-16 sm:py-20">
         <div className="text-center">
-          <span className="font-mono text-xs uppercase tracking-widest text-accent">
-            Stack del proyecto
-          </span>
           <h2 className="mt-2 text-2xl font-semibold text-ink-bright sm:text-3xl">
-            Cuatro componentes técnicos
+            Cuatro componentes
           </h2>
-          <p className="mx-auto mt-3 max-w-xl text-sm text-ink-dim">
-            Cada etapa construye sobre la anterior para conformar la arquitectura
-            cloud completa.
-          </p>
+          
         </div>
 
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">

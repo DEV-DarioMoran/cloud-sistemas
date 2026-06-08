@@ -1,4 +1,3 @@
-import { Code2, Mail } from 'lucide-react'
 import PageHeader from '../components/PageHeader'
 
 const integrantes = [
@@ -57,22 +56,6 @@ export default function Equipo() {
               ))}
             </div>
 
-            <div className="mt-5 flex items-center gap-2">
-              <a
-                href="#"
-                aria-label="GitHub"
-                className="rounded-md border border-line p-2 text-ink-dim transition-colors hover:border-accent-border hover:text-accent"
-              >
-                <Code2 size={16} />
-              </a>
-              <a
-                href="#"
-                aria-label="Correo"
-                className="rounded-md border border-line p-2 text-ink-dim transition-colors hover:border-accent-border hover:text-accent"
-              >
-                <Mail size={16} />
-              </a>
-            </div>
           </article>
         ))}
       </div>

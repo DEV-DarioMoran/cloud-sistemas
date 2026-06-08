@@ -1,11 +1,50 @@
 import { useState } from 'react'
-import { Server, Container, Boxes, FileText } from 'lucide-react'
+import type { ReactElement } from 'react'
+import { Server, Container, Boxes, FileText, ExternalLink } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import PageHeader from '../components/PageHeader'
 import CodeBlock from '../components/CodeBlock'
 import Screenshot from '../components/Screenshot'
 
+type IconProps = { size?: number; className?: string }
+
+function GithubIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58 0-.29-.01-1.04-.02-2.04-3.34.72-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.21.09 1.84 1.24 1.84 1.24 1.07 1.84 2.81 1.31 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.13-.3-.54-1.52.11-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.65 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.8 5.62-5.48 5.92.43.37.81 1.1.81 2.22 0 1.6-.01 2.9-.01 3.29 0 .32.21.7.82.58A12.01 12.01 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z" />
+    </svg>
+  )
+}
+
+function DockerIcon({ size = 18, className }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+      aria-hidden="true"
+    >
+      <path d="M13.98 11.08h2.12a.19.19 0 0 0 .19-.19V9.01a.19.19 0 0 0-.19-.19h-2.12a.19.19 0 0 0-.19.19v1.88c0 .1.08.19.19.19m-2.95 0h2.12a.19.19 0 0 0 .19-.19V9.01a.19.19 0 0 0-.19-.19h-2.12a.19.19 0 0 0-.19.19v1.88c0 .1.08.19.19.19m-2.91 0h2.12a.19.19 0 0 0 .19-.19V9.01a.19.19 0 0 0-.19-.19H8.12a.19.19 0 0 0-.19.19v1.88c0 .1.08.19.19.19m-2.92 0h2.12a.19.19 0 0 0 .19-.19V9.01a.19.19 0 0 0-.19-.19H5.2a.19.19 0 0 0-.19.19v1.88c0 .1.08.19.19.19m5.83-2.72h2.12a.19.19 0 0 0 .19-.19V6.29a.19.19 0 0 0-.19-.19h-2.12a.19.19 0 0 0-.19.19v1.88c0 .1.08.19.19.19m-2.91 0h2.12a.19.19 0 0 0 .19-.19V6.29a.19.19 0 0 0-.19-.19H8.12a.19.19 0 0 0-.19.19v1.88c0 .1.08.19.19.19m14.69 1.37c-.4-.27-1.32-.37-2.03-.23-.09-.66-.46-1.24-1.13-1.76l-.23-.15-.15.22c-.3.46-.46 1.09-.42 1.7.02.34.13.94.46 1.46-.32.18-.95.42-1.78.4H.16l-.03.18c-.13.79-.13 3.26 1.46 5.16 1.21 1.44 3.02 2.17 5.39 2.17 5.13 0 8.93-2.36 10.71-6.66.7.01 2.2.01 2.98-1.49.05-.08.16-.31.5-1.01l.02-.06zm-9.83-7.36h-2.12a.19.19 0 0 0-.19.19v1.88c0 .1.08.19.19.19h2.12a.19.19 0 0 0 .19-.19V2.56a.19.19 0 0 0-.19-.19" />
+    </svg>
+  )
+}
+
 type Bloque = { title: string; code: string }
+type Captura = { label: string; src?: string }
+type Enlace = {
+  label: string
+  href: string
+  icon: (props: IconProps) => ReactElement
+}
 type Seccion = {
   id: string
   label: string
@@ -14,7 +53,8 @@ type Seccion = {
   descripcion: string
   specs: string[]
   bloques: Bloque[]
-  capturas: string[]
+  capturas: Captura[]
+  enlaces?: Enlace[]
 }
 
 const secciones: Seccion[] = [
@@ -36,23 +76,18 @@ const secciones: Seccion[] = [
       {
         title: 'red interna — VirtualBox',
         code: `# Configurar red interna en ambas VMs
-VBoxManage modifyvm "Fedora-VM1" --nic1 intnet --intnet1 "redos"
-VBoxManage modifyvm "Fedora-VM2" --nic1 intnet --intnet1 "redos"
 
-# Asignar IP estática (dentro de cada VM)
-sudo nmcli con add type ethernet con-name red-interna ifname enp0s3 \\
+sudo nmcli con add type ethernet con-name red-interna ifname enp0s8 \\
   ip4 192.168.50.10/24
 sudo nmcli con up red-interna`,
       },
       {
-        title: 'instalar y habilitar SSH',
+        title: 'habilitar SSH',
         code: `# En la VM servidor
 sudo dnf install -y openssh-server
 sudo systemctl enable --now sshd
 sudo systemctl status sshd
-
-# Verificar conexión desde la VM cliente
-ssh usuario@192.168.50.10`,
+ssh usuario@192.168.10.2`,
       },
       {
         title: 'verificar particiones',
@@ -63,9 +98,13 @@ sudo fdisk -l /dev/sda`,
       },
     ],
     capturas: [
-      'VMs Fedora 41 corriendo en VirtualBox',
-      'Particionamiento manual del disco',
-      'Conexión SSH entre las dos VMs',
+      { label: 'Montando Fedora en VirtualBox', src: '/vm-virtualbox.png' },
+      { label: 'Instalación de Fedora 41', src: '/fedora-install.png' },
+      {
+        label: 'Instalación de Fedora Server',
+        src: '/fedora-server-install.png',
+      },
+      { label: 'VM Fedora en ejecución', src: '/vm-fedora-running.png' },
     ],
   },
   {
@@ -129,9 +168,33 @@ docker-compose down`,
       },
     ],
     capturas: [
-      'Contenedores en ejecución (docker ps)',
-      'Frontend Nginx respondiendo en el navegador',
-      'Volumen persistente conservando los datos',
+      {
+        label: 'Build de los contenedores (docker-compose)',
+        src: '/docker-build.png',
+      },
+      { label: 'Los 2 servicios corriendo', src: '/docker-servicios.png' },
+      {
+        label: 'Frontend respondiendo en localhost',
+        src: '/docker-localhost.png',
+      },
+      { label: 'Contenedores en ejecución', src: '/docker-contenedores.png' },
+      {
+        label: 'Subiendo los contenedores a Docker Hub',
+        src: '/subiendo-contendeodres-dockerhub.png',
+      },
+      { label: 'Imágenes publicadas en Docker Hub', src: '/docker-hub.png' },
+    ],
+    enlaces: [
+      {
+        label: 'grupo3-backend',
+        href: 'https://hub.docker.com/r/dariomoran2003/grupo3-backend',
+        icon: DockerIcon,
+      },
+      {
+        label: 'grupo3-frontend',
+        href: 'https://hub.docker.com/r/dariomoran2003/grupo3-frontend',
+        icon: DockerIcon,
+      },
     ],
   },
   {
@@ -208,9 +271,16 @@ minikube service nginx-service --url`,
       },
     ],
     capturas: [
-      'Pods en ejecución (kubectl get pods)',
-      'Service NodePort accesible desde el navegador',
-      'Escalado a 3 réplicas confirmado',
+      { label: 'Arrancando Minikube', src: '/minikube-start.png' },
+      {
+        label: 'Desplegando los servicios en Kubernetes',
+        src: '/k8s-deploy.png',
+      },
+      {
+        label: 'Nginx en la URL del Service NodePort',
+        src: '/k8s-nodeport.png',
+      },
+      { label: 'Escalado a 3 réplicas', src: '/k8s-escalado.png' },
     ],
   },
   {
@@ -230,21 +300,31 @@ minikube service nginx-service --url`,
       {
         title: 'levantar el sitio de documentación',
         code: `# Clonar el repositorio
-git clone https://github.com/grupo3/arquitecto-cloud.git
-cd arquitecto-cloud
+git clone https://github.com/DEV-DarioMoran/cloud-sistemas.git
+cd cloud-sistemas
 
 # Instalar dependencias y ejecutar
-npm install
-npm run dev
+bun install
+bun run dev
 
 # Generar build de producción
-npm run build`,
+bun run build`,
       },
     ],
     capturas: [
-      'Página de inicio del sitio web',
-      'Miniatura del video en YouTube',
-      'Repositorio del proyecto en GitHub',
+      { label: 'Página de inicio del sitio web', src: '/inicio-pagina-web.png' },
+      { label: 'Miniatura del video en YouTube' },
+      {
+        label: 'Repositorio del proyecto en GitHub',
+        src: '/repor-github.png',
+      },
+    ],
+    enlaces: [
+      {
+        label: 'DEV-DarioMoran/cloud-sistemas',
+        href: 'https://github.com/DEV-DarioMoran/cloud-sistemas',
+        icon: GithubIcon,
+      },
     ],
   },
 ]
@@ -314,6 +394,28 @@ export default function Componentes() {
           ))}
         </div>
 
+        {/* Enlaces a repositorios */}
+        {seccion.enlaces && (
+          <div className="mt-6 flex flex-wrap gap-3">
+            {seccion.enlaces.map(({ label, href, icon: Icon }) => (
+              <a
+                key={href}
+                href={href}
+                target="_blank"
+                rel="noreferrer"
+                className="group inline-flex items-center gap-2.5 rounded-lg border border-accent-border bg-accent-soft px-4 py-2.5 text-sm font-medium text-accent transition-colors hover:bg-accent hover:text-bg"
+              >
+                <Icon size={18} />
+                {label}
+                <ExternalLink
+                  size={14}
+                  className="opacity-50 transition-opacity group-hover:opacity-100"
+                />
+              </a>
+            ))}
+          </div>
+        )}
+
         {/* Comandos */}
         <div className="mt-10">
           <h3 className="mb-4 text-sm font-semibold uppercase tracking-wider text-ink-dim">
@@ -333,7 +435,7 @@ export default function Componentes() {
           </h3>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {seccion.capturas.map((c) => (
-              <Screenshot key={c} label={c} />
+              <Screenshot key={c.label} label={c.label} src={c.src} />
             ))}
           </div>
         </div>
