@@ -106,6 +106,10 @@ sudo fdisk -l /dev/sda`,
       },
       { label: 'VM Fedora en ejecución', src: '/vm-fedora-running.png' },
       { label: 'Particionamiento manual del disco', src: '/particiones.png' },
+      {
+        label: 'Configurando la red interna entre máquinas',
+        src: '/configurand-red-interna-maquinas.png',
+      },
       { label: 'SSH configurado', src: '/ssh-configurado.png' },
       {
         label: 'Ping desde Fedora por SSH',
