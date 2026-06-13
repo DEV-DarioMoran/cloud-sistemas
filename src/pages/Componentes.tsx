@@ -105,7 +105,7 @@ sudo fdisk -l /dev/sda`,
         src: '/fedora-server-install.png',
       },
       { label: 'VM Fedora en ejecución', src: '/vm-fedora-running.png' },
-      { label: 'Particionamiento manual del disco', src: '/particiones.png' },
+      { label: 'Particionamiento manual del disco', src: '/partcionesss-final.png' },
       {
         label: 'Configurando la red interna entre máquinas',
         src: '/configurand-red-interna-maquinas.png',
